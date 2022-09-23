@@ -15,7 +15,7 @@ function Calculator(){
     const [resultData,setData] = useState({nCr: '', nPr: ''});
 
     async function doNCPRCalculation(){
-        if(n1=='' && r1== '' && n2=='' && r2==''){
+        if(n1==='' && r1=== '' && n2==='' && r2===''){
             return;
         }
         let item = {n1,r1,n2,r2};
