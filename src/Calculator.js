@@ -12,25 +12,32 @@ function Calculator(){
     const [n2,setN2] = useState("");
     const [r2,setR2] = useState("");
 
-    const [resultData,setData] = useState([]);
+    const [resultData,setData] = useState({nCr: '', nPr: ''});
 
     async function doNCPRCalculation(){
-        const formData = new FormData();
-        formData.append('name',34);
-        formData.append('n1',n1);
-        formData.append('r1',r1);
-        formData.append('n2',n2);
-        formData.append('r2',r2);
-        console.log(formData);
+        if(n1=='' && r1== '' && n2=='' && r2==''){
+            return;
+        }
+        let item = {n1,r1,n2,r2};
 
         let result = await fetch("http://127.0.0.1:8000/api/nCPr",{
             method:"POST",
-            body: formData
+            body: JSON.stringify(item),
+            headers: {
+                "Content-Type":"application/json",
+                "Accept":"application/json "
+            }
         })
-        result = result.json()
+        result = await result.json()
         setData(result);
-        console.log(result);
-        console.log(resultData);
+    }
+
+    function reset(){
+        setData({nCr: '', nPr: ''});
+        setN1('');
+        setR1('');
+        setN2('');
+        setR2('');
     }
     return (
         <Container style={{"backgroundColor": "#a59090"}}>
@@ -38,22 +45,22 @@ function Calculator(){
             <Row className='mt-5'>
                 <Col>
                 <label><h3 style={{'marginLeft': '-116px'}}>n</h3>
-                    <input type="text" size="sm" className="form-control input-box" onChange={(e)=>setN1(e.target.value)}/>
+                    <input type="text" size="sm" className="form-control input-box" value={n1} onChange={(e)=>setN1(e.target.value)}/>
                 </label>
                 <h1>C</h1>
                 <label><h3 style={{'marginLeft': '-116px'}}>r</h3>
-                    <input type="text" size="sm" className="form-control input-box"  onChange={(e)=>setR1(e.target.value)}/>
+                    <input type="text" size="sm" className="form-control input-box" value={r1}  onChange={(e)=>setR1(e.target.value)}/>
                 </label>
                     
                 </Col>
 
                 <Col>
                 <label><h3 style={{'marginLeft': '-116px'}}>n</h3>
-                    <input type="text" size="sm" className="form-control input-box"  onChange={(e)=>setN2(e.target.value)}/>
+                    <input type="text" size="sm" className="form-control input-box" value={n2}  onChange={(e)=>setN2(e.target.value)}/>
                 </label>
                 <h1>P</h1>
                 <label><h3 style={{'marginLeft': '-116px'}}>r</h3>
-                    <input type="text" size="sm" className="form-control input-box"  onChange={(e)=>setR2(e.target.value)}/>
+                    <input type="text" size="sm" className="form-control input-box" value={r2}  onChange={(e)=>setR2(e.target.value)}/>
                 </label>
 
                     
@@ -62,17 +69,17 @@ function Calculator(){
 
             <Row>
                 <Col className="m-5">
-                    <input type="text" readOnly={true} size="sm" className="form-control input-box"/>
+                    <input type="text" value={resultData.nCr} readOnly={true} size="sm" className="form-control input-box"/>
                 </Col>
                 <Col className="m-5">
-                    <input type="text" readOnly={true} size="sm" className="form-control input-box"/>
+                    <input type="text" value={resultData.nPr} readOnly={true} size="sm" className="form-control input-box"/>
                 </Col>
             </Row>
 
             <Row>
                 <Col className="m-5">
                     <span className='m-5'><button className="btn btn-lg btn-success" onClick={doNCPRCalculation}>Go</button></span>
-                    <span className='m-5'><button className="btn btn-lg btn-warning">Clear</button></span>
+                    <span className='m-5'><button className="btn btn-lg btn-warning" onClick={reset}>Clear</button></span>
                 </Col>
             </Row>
         </Container>
